@@ -1,4 +1,5 @@
 ﻿using CQRS_Pattern.Commands;
+using CQRS_Pattern.Exceptions;
 using CQRS_Pattern.Models;
 using CQRS_Pattern.Queries;
 using MediatR;
@@ -30,7 +31,10 @@ namespace CQRS_Pattern.Controllers
         public async Task<CustomerDetails> GetCustomerByIdAsync(int customerId)
         {
             var customerDetails = await mediator.Send(new GetCustomerByIdQuery() { Id = customerId });
-
+            if (customerDetails == null)
+            {
+                throw new NotFoundException($"A customer from the database with ID: {customerId} could not be found.");
+            }
             return customerDetails;
         }
 
